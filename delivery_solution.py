@@ -1,34 +1,40 @@
-# 141045603 - ID посылки
+# 141325975 - ID посылки
 import sys
-data: list = list(map(int, sys.stdin.readline().rstrip().split()))
-limit: int = int(sys.stdin.readline().rstrip())
 
 
-def main(data: list, limit: int) -> int:
-    """The delivery service: main function"""
+def get_number_of_platforms(data: list, limit: int) -> int:
+    """The delivery service: main function."""
     platforms: int = 0
-    data_equal_limit: list = [item for item in data if item == limit]
-    data_other: list = [item for item in data if item < limit]
-    data_other.sort()
-    platforms += len(data_equal_limit)
+    data.sort()
     left_pointer: int = 0
-    right_pointer: int = len(data_other) - 1
+    right_pointer: int = len(data) - 1
+
+    def get_step_left(platforms: int, right_pointer: int) -> tuple:
+        """Takes a step to the left."""
+        platforms += 1
+        right_pointer -= 1
+        return platforms, right_pointer
+
+    def get_step_right(left_pointer: int) -> int:
+        """Takes a step to the right."""
+        left_pointer += 1
+        return left_pointer
+
     while left_pointer <= right_pointer:
-        if left_pointer != right_pointer:
-            total: int = data_other[left_pointer] + data_other[right_pointer]
-        else:
-            total: int = data_other[left_pointer]
+        total: int = data[left_pointer] + data[right_pointer]
         if total <= limit:
-            platforms += 1
-            left_pointer += 1
-            right_pointer -= 1
+            platforms, right_pointer = get_step_left(platforms, right_pointer)
+            left_pointer = get_step_right(left_pointer)
         elif total > limit:
-            platforms += 1
-            right_pointer -= 1
+            platforms, right_pointer = get_step_left(platforms, right_pointer)
         else:
-            left_pointer += 1
+            left_pointer = get_step_right(left_pointer)
+    if left_pointer == right_pointer:
+        platforms += 1
     return platforms
 
 
 if __name__ == '__main__':
-    print(main(data, limit))
+    data: list = [int(item) for item in sys.stdin.readline().rstrip().split()]
+    limit: int = int(sys.stdin.readline().rstrip())
+    print(get_number_of_platforms(data, limit))
