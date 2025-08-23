@@ -1,10 +1,9 @@
-# 141465379 - ID посылки
+# 141471187 - ID посылки
 import sys
 
 
-def get_number_of_platforms(data: list, limit: int) -> int:
-    """The delivery service: main function."""
-    data.sort()
+def get_number_of_platforms(data_in: list, limit: int) -> int:
+    data = sorted(data_in.copy())
     platforms: int = 0
     left_pointer: int = 0
     right_pointer: int = len(data) - 1
